@@ -23,9 +23,10 @@ module.exports = {
                 </ul>
             `
         */
-        let customFilter = { isAvailable: true } // available olmayan araçları gösterme 
+        // available olmayan araçları gösterme 
+        let customFilter = { isAvailable: true }
+        
         /* TARIHE GÖRE LİSTELE */
-
         const { startDate: getStartDate, endDate: getEndDate } = req.query
 
         if (getStartDate && getEndDate) {

@@ -9,7 +9,7 @@ const router = require('express').Router()
 const car = require('../controllers/car')
 const permissions = require('../middlewares/permissions')
 
-// URL: /cars
+
 
 router.route('/')
     .get(car.list)

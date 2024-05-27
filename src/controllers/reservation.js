@@ -68,7 +68,7 @@ module.exports = {
         req.body.updatedId = req.user._id
 
         //kullanıcının çakışan tarihlerde başka araç rezervasyonu var mı?
-        const userResevationInDates = await Reservation.findOne({
+        const userReservationInDates = await Reservation.findOne({
             userId: req.body.userId, //bu kullanıcı
             // carId: req.body.carId, // Farklı bir araba kiralanabilir
             //önceden bir araç rezervasyonu yapmış mı demek aşağıdaki
