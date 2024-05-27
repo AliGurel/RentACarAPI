@@ -78,7 +78,7 @@ const CarSchema = new mongoose.Schema({
 
     isAvailable: {
         type: Boolean,
-        defualt: true
+        default: true
     },
 
     createdId: {

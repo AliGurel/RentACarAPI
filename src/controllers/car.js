@@ -49,7 +49,7 @@ module.exports = {
                 ]
             }, { _id: 0, carId: 1 }).distinct('carId')
 
-            //customFiltetr objesine NotIn (nin) ekle
+            //customFilter objesine NotIn (nin) ekle
             customFilter._id = { $nin: reservedCars } // yukarıda reserve edilmemiş olan araçları id key ine atadı
 
             if (reservedCars.length) {
