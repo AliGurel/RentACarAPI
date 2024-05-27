@@ -55,6 +55,7 @@ module.exports = {
                 }
             }
         */
+
         //Eğer req.body de userId gönderilmemişse aşağıdaki senaryoyu kullan;
         // Mevcut kullanıcı "Admin/staff değilse" veya "UserId gönderilmemişse" user._id yi req.user'dan al:
         //Admin veya staff başkası adına da rezervasyon yapabilir o nedenle değilse kontrolü yapıldı
@@ -68,10 +69,12 @@ module.exports = {
         req.body.updatedId = req.user._id
 
         //kullanıcının çakışan tarihlerde başka araç rezervasyonu var mı?
+        //Kullanıcı aynı tarihlerde başka araç reserve edemez
         const userReservationInDates = await Reservation.findOne({
-            userId: req.body.userId, //bu kullanıcı
-            // carId: req.body.carId, // Farklı bir araba kiralanabilir
-            //önceden bir araç rezervasyonu yapmış mı demek aşağıdaki
+            userId: req.body.userId, //bu kullanıcı önceden bir araç rezervasyonu yapmış mı 
+            // carId: req.body.carId, // aynı kullanıcı aynı tarihte farklı bir aracı kiralayabilir demek istersek bu kodu aktif edebiliriz
+            // alttaki kodu aktif ettiğimide filtre şunu yapar, Reservation tablosundan kiralama yapan id yi ve kiraladığı arabanın id sini getirir, dolayısıyla, aynı kullanıcı için farklı araç kiralamak engellenmez
+            //ancak carId li olan kod aktif olmazsa, sadece kiralama yapan userId yi filtrreleyeceği için aynı kullanıcının aynı tarihte farklı araç kiralaması engellenmiş olur
             $nor: [
                 { startDate: { $gt: req.body.endDate } }, // gt: >
                 { endDate: { $lt: req.body.startDate } } // lt: <
