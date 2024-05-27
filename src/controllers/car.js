@@ -25,37 +25,37 @@ module.exports = {
         */
         // available olmayan araçları gösterme 
         let customFilter = { isAvailable: true }
-        
+
         /* TARIHE GÖRE LİSTELE */
         const { startDate: getStartDate, endDate: getEndDate } = req.query
-
+        // URL: ?startDate=2024-01-01&endDate=2024-01-10
         if (getStartDate && getEndDate) {
-            //rezerve edilmiş araçları bulmaya çalışacağız
-            /*
+            //rezerve edilmiş araçları bulmaya çalışacağız            
             const reservedCars = await Reservation.find({
                 $nor: [
-                    { startDate: { $gt: getEndDate } }, // gt => büyük eşittir
-                    // res tablosundaki startdate, yeni reserve etmek istediğim enddate den büyük mü?
+                    { startDate: { $gt: getEndDate } }, // gt => büyük mü
+                    // res tablosundaki (yani önceki reservasyonlarda) startdate, yeni reserve etmek istediğim enddate den büyük mü?
                     { endDate: { $lt: getStartDate } } // lt : küçüktür demek
                     // res tablosundaki endDate, yeni reserve etmek istediğim startdate den küçük mü?
                 ]
             }, { _id: 0, carId: 1 }).distinct('carId') // id yi gösterme, sadece carId yi ver bana demek
             // distinct, verileri array içinde direkt ID olarak getirir, bu olmasaydı array içinde obje içinde Id olarak geliyordu
-            */
+            // console.log(reservedCars);
 
-            const reservedCars = await Reservation.find({
-                $nor: [
-                    { startDate: { $gt: getEndDate } }, // gt: >
-                    { endDate: { $lt: getStartDate } } // lt: <
-                ]
-            }, { _id: 0, carId: 1 }).distinct('carId')
 
-            //customFilter objesine NotIn (nin) ekle
-            customFilter._id = { $nin: reservedCars } // yukarıda reserve edilmemiş olan araçları id key ine atadı
+            // const reservedCars = await Reservation.find({
+            //     $nor: [
+            //         { startDate: { $gt: getEndDate } }, // gt: >
+            //         { endDate: { $lt: getStartDate } } // lt: <
+            //     ]
+            // }, { _id: 0, carId: 1 }).distinct('carId')
 
             if (reservedCars.length) {
-                customFilter._id = { $nin: reservedCars }
+                //customFilter objesine NotIn (nin) ekle
+                customFilter._id = { $nin: reservedCars } // yukarıda reserve edilmiş olan araçlardan hariiç olan araçları yani müsait olan araçların idsini customFilter objesindeki id ye atadık 
+                //eğer querydeki tarihlerde reserve edilen bir araç varsa o zaman filtreleme yap, yoksa yapma demek
             }
+            console.log(customFilter);
         } else {
             req.errorStatusCode = 401
             throw new Error('startDate and endDate queries are required.')
